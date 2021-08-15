@@ -7,27 +7,13 @@
 class Solution:
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
         flag = False
-        def validate(root, parent_val, less):
+        def validate(root, fr, to):
             if root == None:
                 return True
             
-            if parent_val != None:
-                if less: # left
-                    if root.left and (root.left.val >= root.val or root.left.val >= parent_val):
-                        return False
-                    if root.right and (root.right.val <= root.val or root.right.val >= parent_val):
-                        return False
-                else: # right
-                    if root.left and (root.left.val >= root.val or root.left.val <= parent_val):
-                        return False
-                    if root.right and (root.right.val <= root.val or root.right.val <= parent_val):
-                        return False
+            if fr < root.val and root.val < to:
+                return validate(root.left, fr, root.val) and validate(root.right, root.val, to)
             else:
-                if root.left and root.left.val >= root.val:
-                    return False
-                if root.right and root.right.val <= root.val:
-                    return False
-                
-
-            return validate(root.left, root.val, True) and validate(root.right, root.val, False)
-        return validate(root, None, False) 
+                return False
+            
+        return validate(root, -2**32, 2**32) 
